@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": false,
+        "removeComments": true,
+        "target": "es6",
+        "outDir": "../../dist/server",
+        "allowJs": false,
+        "checkJs": false,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "noUnusedLocals": true,            
+        "noUnusedParameters": false,       
+        "noImplicitReturns": true,         
+        "noFallthroughCasesInSwitch": true,
+        "alwaysStrict": true,
+        "strict": true,          
+        "strictNullChecks": true,
+        "noImplicitThis": false, 
+    },
+    "include": [
+        "typings/main.d.ts",
+        "**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}
