@@ -1,8 +1,15 @@
 /* styles */
 /* called by your view template */
 
+$success-color: #35aa3e;
+$error-color: rgb(224, 55, 55);
+
 * {
   box-sizing: border-box;
+}
+
+.form {
+    padding: 5px
 }
 
 body {
@@ -23,7 +30,8 @@ p {
   max-width: 600px;
 }
 
-input, textarea {
+input,
+textarea {
   display: block;
   margin-bottom: 10px;
   padding: 5px;
@@ -58,4 +66,15 @@ footer {
   margin-top: 50px;
   padding-top: 25px;
   border-top: 1px solid lightgrey;
+}
+
+.statusHelper {
+    font-size: 16px;
+    padding: 4px;
+}
+.errorStatus {
+    color: $error-color;
+}
+.successStatus {
+    color: $success-color;
 }
