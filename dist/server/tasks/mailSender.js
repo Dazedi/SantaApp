@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const cron = require("node-cron");
 const Wish_1 = require("../models/Wish");
 const Mailer_1 = require("../utils/Mailer");
-cron.schedule('*/1 * * * *', () => __awaiter(void 0, void 0, void 0, function* () {
+cron.schedule('*/15 * * * *', () => __awaiter(void 0, void 0, void 0, function* () {
     const unsentWishes = yield Wish_1.Wish.getUnsentWishes();
     if (unsentWishes.length > 0) {
         unsentWishes.forEach((wish) => {

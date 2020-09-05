@@ -2,19 +2,14 @@ import React, { useState, useEffect } from "react";
 import Button from "./Button";
 import SantaAPI from "../api/Wish";
 import Input from "./Input";
+import { IStatus, STATUS } from "../App";
 
 interface IFormProps {
+    setStatus: (status: IStatus) => void;
     children?: JSX.Element | JSX.Element[]
 }
 
-enum STATUS { SUCCESS, ERROR, VALIDATION_ERROR }
-
-interface IStatus {
-    message: string;
-    type: STATUS
-}
-
-const SantaForm = ({ children }: IFormProps) => {
+const SantaForm = ({ children, setStatus}: IFormProps) => {
     const [username, setUsername] = useState<string>("");
     const [message, setMessage] = useState<string>("");
 
@@ -27,12 +22,12 @@ const SantaForm = ({ children }: IFormProps) => {
         // Make request to server API
         const result = await SantaAPI.createMessage({ username, message });
         if (result.status === "success") {
-            setStatusMessage({
+            setStatus({
                 message: "Your message is being sent to Santa!",
                 type: STATUS.SUCCESS
             });
         } else {
-            setStatusMessage({
+            setStatus({
                 message: result.message,
                 type: STATUS.ERROR
             });
@@ -73,13 +68,6 @@ const SantaForm = ({ children }: IFormProps) => {
                 <div 
                     className={"statusHelper errorStatus"}>
                     {validationMessage}
-                </div>
-            }
-            {
-                statusMessage &&
-                <div 
-                    className={"statusHelper " + (statusMessage.type === STATUS.ERROR ? "errorStatus" : "successStatus")}>
-                    {statusMessage.message}
                 </div>
             }
             <Button>Submit</Button>

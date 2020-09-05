@@ -5,7 +5,7 @@ import { Mailer } from "../utils/Mailer";
 /**
  * Send mail to santa every 15 minutes
  */
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('*/15 * * * *', async () => {
     const unsentWishes = await Wish.getUnsentWishes();
     if (unsentWishes.length > 0) {
         unsentWishes.forEach((wish) => {
