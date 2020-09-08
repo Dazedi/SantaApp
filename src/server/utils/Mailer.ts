@@ -3,7 +3,7 @@ import config from "../config/config";
 
 let _mailer;
 
-interface ISendMail {
+export interface ISendMail {
     text: string;
     from: string;
     to: string;
@@ -27,8 +27,7 @@ export class Mailer {
             port: config.smtp.port,
             secure: config.smtp.port === 465,
             auth: {
-                user: config.smtp.user,
-                pass: config.smtp.pass
+              ...config.smtp.auth
             }
         })
     }

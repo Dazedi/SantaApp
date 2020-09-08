@@ -8,7 +8,9 @@ const app = express();
 import * as bodyParser from 'body-parser';
 import config from "./config/config";
 import routes from './routes/v1';
-require("./tasks/mailSender");
+import MailSender from "./tasks/mailSender";
+
+MailSender(config.mail_cron).start();
 
 app.use(bodyParser());
 app.use(morgan(config.env === "development" ? "dev" : "combined"));

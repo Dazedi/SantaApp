@@ -19,10 +19,7 @@ class Mailer {
             host: config_1.default.smtp.host,
             port: config_1.default.smtp.port,
             secure: config_1.default.smtp.port === 465,
-            auth: {
-                user: config_1.default.smtp.user,
-                pass: config_1.default.smtp.pass
-            }
+            auth: Object.assign({}, config_1.default.smtp.auth)
         });
     }
     static getMailer() {

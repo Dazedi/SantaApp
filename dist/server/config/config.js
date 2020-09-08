@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const dotenv = require("dotenv");
 const Joi = require("@hapi/joi");
+const cron = require("node-cron");
 dotenv.config({ path: path.join(__dirname, "../../../.env") });
 const envSchema = Joi.object()
     .keys({
@@ -10,7 +11,13 @@ const envSchema = Joi.object()
     SMTP_USER: Joi.string().required(),
     SMTP_PASS: Joi.string().required(),
     SMTP_HOST: Joi.string().required(),
-    SMTP_PORT: Joi.number().required()
+    SMTP_PORT: Joi.number().required(),
+    MAIL_CRON: Joi.string().custom((value, helper) => {
+        if (!cron.validate(value)) {
+            return helper.message({ "invalid_pattern": "MAIL_CRON is not valid cron pattern" });
+        }
+        return value;
+    })
 })
     .unknown();
 const { value: env, error } = envSchema.prefs({ errors: { label: 'key' } }).validate(process.env);
@@ -22,8 +29,11 @@ const config = {
     smtp: {
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASS
-    }
+        auth: {
+            user: env.SMTP_USER,
+            pass: env.SMTP_PASS
+        }
+    },
+    mail_cron: env.MAIL_CRON
 };
 exports.default = config;

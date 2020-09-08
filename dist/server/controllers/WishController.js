@@ -9,9 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const models_1 = require("../models");
 const Joi = require("@hapi/joi");
-const luxon_1 = require("luxon");
+const WishService_1 = require("../services/WishService");
 class WishController {
 }
 exports.default = WishController;
@@ -32,38 +31,18 @@ WishController.createWish = (req, res) => __awaiter(void 0, void 0, void 0, func
             data
         });
     }
-    const user = yield models_1.User.getByUsername(value.username);
-    if (!user) {
+    try {
+        const result = yield WishService_1.default.createWish(value);
+        res.status(201).json({
+            status: 'success',
+            message: result,
+        });
+    }
+    catch (err) {
         return res.status(500).json({
             status: 'error',
-            message: 'User not found',
+            message: err,
             data
         });
     }
-    const userProfile = yield models_1.UserProfile.getByUid(user.uid);
-    if (!userProfile) {
-        return res.status(500).json({
-            status: 'error',
-            message: 'UserProfile not found',
-            data
-        });
-    }
-    const birthdate = luxon_1.DateTime.fromFormat(userProfile.birthdate, 'yyyy/dd/MM');
-    const now = luxon_1.DateTime.local();
-    if (now >= birthdate.plus({ years: 11 })) {
-        return res.status(500).json({
-            status: 'error',
-            message: 'User is more than 10 years old',
-            data
-        });
-    }
-    yield models_1.Wish.createWish({
-        username: user.username,
-        address: userProfile.address,
-        message: value.message
-    });
-    res.status(201).json({
-        status: 'success',
-        message: 'Wish was created successfully',
-    });
 });

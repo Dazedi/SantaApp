@@ -9,31 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cron = require("node-cron");
 const Wish_1 = require("../models/Wish");
 const Mailer_1 = require("../utils/Mailer");
-cron.schedule('*/15 * * * *', () => __awaiter(void 0, void 0, void 0, function* () {
+const Scheduler_1 = require("../utils/Scheduler");
+const RunFunction = () => __awaiter(void 0, void 0, void 0, function* () {
     const unsentWishes = yield Wish_1.Wish.getUnsentWishes();
     if (unsentWishes.length > 0) {
-        unsentWishes.forEach((wish) => {
+        yield Promise.all(unsentWishes.map((wish) => __awaiter(void 0, void 0, void 0, function* () {
             const textBody = [
                 `Name: ${wish.username}`,
                 `Address: ${wish.address}`,
                 `Message: ${wish.message}`
             ];
-            Mailer_1.Mailer.sendMail({
+            const success = Mailer_1.Mailer.sendMail({
                 from: "do_not_reply@northpole.com",
                 to: "santa@northpole.com",
                 subject: `New wish from ${wish.username}`,
                 text: textBody.join("\n"),
-            }).then((result) => {
-                if (result) {
-                    Wish_1.Wish.updateWish(wish.id, { sent: true });
-                }
             });
-        });
+            if (success) {
+                yield Wish_1.Wish.updateWish(wish.id, { sent: true });
+                return true;
+            }
+            return false;
+        })));
     }
     else {
         console.log("No pending mails");
     }
-}));
+});
+exports.default = (pattern) => Scheduler_1.default({
+    pattern,
+    run: RunFunction
+});

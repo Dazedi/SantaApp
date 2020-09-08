@@ -5,7 +5,7 @@ class Utils {
 exports.default = Utils;
 Utils.pick = (object, fields) => {
     let obj = {};
-    for (const field in fields) {
+    for (const field of fields) {
         if (object &&
             typeof object === "object" &&
             Object.prototype.hasOwnProperty.call(object, field)) {
